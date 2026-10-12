@@ -1,0 +1,878 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta property="og:title" content="AI Voice Agent — Live Call Simulator" />
+<meta property="og:description" content="Hear how an AI voice agent handles a real inbound call — booking included. Try the interactive simulation." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://ai-voice-agent-live-call-simulator-mr-bilal-alis-projects.vercel.app" />
+<meta property="og:image" content="https://ai-voice-agent-live-call-simulator-mr-bilal-alis-projects.vercel.app/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="627" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="AI Voice Agent — Live Call Simulator" />
+<meta name="twitter:description" content="Hear how an AI voice agent handles a real inbound call — booking included. Try the interactive simulation." />
+<meta name="twitter:image" content="https://ai-voice-agent-live-call-simulator-mr-bilal-alis-projects.vercel.app/og-image.png" />
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="theme-color" content="#eef4ef" />
+  <link rel="icon" href="data:," />
+  <title>AI Voice Agent — Live Call Simulator</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --page: #eef4ef;
+      --page-deep: #e3eee6;
+      --surface: #ffffff;
+      --surface-2: #f7faf8;
+      --ink: #12251e;
+      --muted: #587066;
+      --line: #cbdacf;
+      --accent: #0d6b4d;
+      --accent-2: #145e47;
+      --accent-soft: #d7ebe1;
+      --accent-pale: #ecf7f1;
+      --warn-bg: #fff6d9;
+      --warn-ink: #694d00;
+      --warn-line: #ead184;
+      --caller: #e8eee9;
+      --shadow: 0 18px 50px rgba(27, 65, 49, .11);
+      --phone-shadow: 0 28px 70px rgba(18, 45, 34, .19);
+      --focus: #f0b429;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --page: #0d1713;
+        --page-deep: #111f19;
+        --surface: #15241e;
+        --surface-2: #1a2c24;
+        --ink: #edf7f1;
+        --muted: #aabeb3;
+        --line: #31463b;
+        --accent: #55c69a;
+        --accent-2: #76d8b3;
+        --accent-soft: #234c3a;
+        --accent-pale: #173328;
+        --warn-bg: #332a13;
+        --warn-ink: #f3d987;
+        --warn-line: #665725;
+        --caller: #25372e;
+        --shadow: 0 18px 50px rgba(0, 0, 0, .22);
+        --phone-shadow: 0 28px 70px rgba(0, 0, 0, .34);
+        --focus: #ffd166;
+      }
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-width: 320px;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 10% 12%, color-mix(in srgb, var(--accent-soft) 54%, transparent) 0 8%, transparent 27%),
+        linear-gradient(180deg, var(--page), var(--page-deep));
+      color: var(--ink);
+      font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    button, a { font: inherit; }
+    button { color: inherit; }
+    button:focus-visible, a:focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 3px;
+    }
+
+    .disclaimer {
+      position: sticky;
+      z-index: 20;
+      top: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      width: 100%;
+      min-height: 42px;
+      padding: 9px 18px calc(9px + env(safe-area-inset-top));
+      border-bottom: 1px solid var(--warn-line);
+      background: color-mix(in srgb, var(--warn-bg) 95%, transparent);
+      color: var(--warn-ink);
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1.35;
+      text-align: center;
+      letter-spacing: .015em;
+      backdrop-filter: blur(12px);
+    }
+    .disclaimer svg { width: 16px; height: 16px; flex: 0 0 auto; }
+
+    main {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 48px 0 30px;
+    }
+
+    .intro {
+      display: grid;
+      grid-template-columns: minmax(0, .82fr) minmax(330px, 1fr);
+      align-items: center;
+      gap: clamp(34px, 7vw, 92px);
+      min-height: calc(100vh - 120px);
+    }
+    .copy { max-width: 540px; }
+    .series-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 18px;
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .series-tag::before {
+      content: "03";
+      display: grid;
+      place-items: center;
+      width: 30px;
+      height: 30px;
+      border: 1px solid var(--accent);
+      border-radius: 50%;
+      font-size: 11px;
+    }
+    h1, h2, h3 { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; margin: 0; }
+    h1 {
+      max-width: 610px;
+      font-size: clamp(38px, 5.2vw, 72px);
+      line-height: .98;
+      letter-spacing: -.055em;
+    }
+    .lead {
+      max-width: 520px;
+      margin: 22px 0 28px;
+      color: var(--muted);
+      font-size: clamp(17px, 2vw, 20px);
+      line-height: 1.58;
+    }
+    .capabilities {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 18px;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .capabilities li { display: flex; align-items: center; gap: 7px; }
+    .capabilities svg { width: 17px; color: var(--accent); }
+
+    .demo-shell {
+      position: relative;
+      width: 100%;
+      max-width: 570px;
+      justify-self: end;
+    }
+    .demo-shell::before {
+      content: "";
+      position: absolute;
+      inset: 7% -7% -5% 8%;
+      z-index: -1;
+      border-radius: 44% 56% 38% 62%;
+      background: var(--accent-soft);
+      transform: rotate(-3deg);
+      opacity: .7;
+    }
+    .demo-panel {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 30px;
+      background: var(--surface);
+      box-shadow: var(--phone-shadow);
+    }
+    .phone-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--line);
+      background: var(--surface-2);
+    }
+    .business-mark {
+      display: grid;
+      flex: 0 0 auto;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 13px;
+      background: var(--accent);
+      color: #fff;
+    }
+    @media (prefers-color-scheme: dark) { .business-mark { color: #07130f; } }
+    .business-mark svg { width: 22px; height: 22px; }
+    .business-name { font-weight: 800; font-size: 16px; }
+    .fictional { margin-top: 2px; color: var(--muted); font-size: 12px; }
+    .line-status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-left: auto;
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+
+    .stage { display: none; min-height: 550px; }
+    .stage.active { display: block; }
+    #landingStage { padding: 30px 26px 28px; }
+    .question-label { color: var(--muted); font-size: 13px; font-weight: 700; }
+    #landingStage h2 { margin-top: 7px; font-size: clamp(25px, 3vw, 34px); letter-spacing: -.035em; }
+    .intent-list { display: grid; gap: 12px; margin-top: 25px; }
+    .intent-btn {
+      display: grid;
+      grid-template-columns: 42px 1fr auto;
+      align-items: center;
+      gap: 13px;
+      width: 100%;
+      padding: 15px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--surface-2);
+      text-align: left;
+      cursor: pointer;
+      transition: border-color .2s ease, background .2s ease, transform .2s ease;
+    }
+    .intent-btn:hover { border-color: var(--accent); background: var(--accent-pale); transform: translateY(-1px); }
+    .intent-icon {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 13px;
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+    .intent-icon svg { width: 21px; height: 21px; }
+    .intent-title { display: block; font-weight: 800; }
+    .intent-note { display: block; margin-top: 2px; color: var(--muted); font-size: 12px; }
+    .arrow { color: var(--accent); font-size: 21px; }
+    .privacy-note {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      margin: 22px 1px 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    .privacy-note svg { flex: 0 0 auto; width: 15px; margin-top: 1px; }
+
+    #callStage { min-height: 550px; }
+    .call-top {
+      display: grid;
+      place-items: center;
+      min-height: 220px;
+      padding: 25px 24px 22px;
+      background: var(--accent-pale);
+      text-align: center;
+    }
+    .caller-avatar {
+      display: grid;
+      place-items: center;
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: var(--surface);
+      color: var(--accent);
+      box-shadow: 0 8px 24px rgba(19, 72, 51, .12);
+    }
+    .caller-avatar svg { width: 30px; height: 30px; }
+    .caller-name { margin-top: 11px; font-weight: 800; font-size: 20px; }
+    .caller-intent { margin-top: 3px; color: var(--muted); font-size: 13px; }
+    .call-clock { margin-top: 11px; color: var(--accent); font-variant-numeric: tabular-nums; font-size: 14px; font-weight: 800; }
+    .waveform {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      height: 34px;
+      margin-top: 8px;
+      opacity: 0;
+    }
+    .waveform.live { opacity: 1; }
+    .waveform i {
+      display: block;
+      width: 4px;
+      height: 8px;
+      border-radius: 99px;
+      background: var(--accent);
+      animation: pulse 1s ease-in-out infinite;
+      animation-play-state: paused;
+    }
+    .waveform.live i { animation-play-state: running; }
+    .waveform i:nth-child(2n) { animation-delay: -.65s; }
+    .waveform i:nth-child(3n) { animation-delay: -.35s; }
+    @keyframes pulse { 0%,100% { height: 7px; opacity: .45; } 50% { height: 28px; opacity: 1; } }
+    .start-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-width: 190px;
+      min-height: 52px;
+      margin-top: 13px;
+      padding: 12px 23px;
+      border: 0;
+      border-radius: 999px;
+      background: var(--accent);
+      color: #fff;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 10px 26px color-mix(in srgb, var(--accent) 28%, transparent);
+    }
+    .start-btn:hover { background: var(--accent-2); }
+    @media (prefers-color-scheme: dark) { .start-btn { color: #07130f; } }
+    .start-btn svg { width: 20px; height: 20px; }
+    .start-btn[disabled] { display: none; }
+
+    .call-body { padding: 18px 20px 22px; }
+    .signal-row { display: flex; flex-wrap: wrap; gap: 7px; min-height: 28px; margin-bottom: 15px; }
+    .signal-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 6px 9px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--surface-2);
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+      transition: background .3s ease, color .3s ease, border-color .3s ease;
+    }
+    .signal-chip::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; opacity: .45; }
+    .signal-chip.on { border-color: color-mix(in srgb, var(--accent) 55%, var(--line)); background: var(--accent-soft); color: var(--accent); }
+    .transcript {
+      height: 272px;
+      overflow-y: auto;
+      padding: 2px 5px 10px 0;
+      scrollbar-color: var(--line) transparent;
+    }
+    .empty-transcript {
+      display: grid;
+      place-items: center;
+      height: 100%;
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+    }
+    .message { display: flex; gap: 9px; margin: 0 0 11px; animation: messageIn .24s ease both; }
+    .message.caller { justify-content: flex-end; }
+    .speaker {
+      display: grid;
+      flex: 0 0 auto;
+      place-items: center;
+      width: 25px;
+      height: 25px;
+      margin-top: 4px;
+      border-radius: 50%;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 10px;
+      font-weight: 800;
+    }
+    .message.caller .speaker { order: 2; background: var(--caller); color: var(--ink); }
+    .bubble {
+      max-width: 79%;
+      padding: 9px 11px;
+      border-radius: 5px 14px 14px 14px;
+      background: var(--accent-pale);
+      color: var(--ink);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    .message.caller .bubble { border-radius: 14px 5px 14px 14px; background: var(--caller); }
+    .speaker-label { display: block; margin-bottom: 2px; color: var(--accent); font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; }
+    .message.caller .speaker-label { color: var(--muted); }
+    @keyframes messageIn { from { opacity: 0; transform: translateY(5px); } }
+
+    #payoffStage { padding: 28px 24px 24px; text-align: center; }
+    .success-mark {
+      display: grid;
+      place-items: center;
+      width: 68px;
+      height: 68px;
+      margin: 0 auto 15px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff;
+    }
+    @media (prefers-color-scheme: dark) { .success-mark { color: #07130f; } }
+    .success-mark svg { width: 33px; height: 33px; }
+    #payoffStage h2 { font-size: clamp(24px, 3vw, 31px); letter-spacing: -.035em; }
+    .illustrative { margin: 7px 0 19px; color: var(--muted); font-size: 12px; }
+    .sms-card {
+      max-width: 410px;
+      margin: 0 auto;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: var(--surface-2);
+      text-align: left;
+    }
+    .sms-head { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 11px; font-weight: 700; }
+    .sms-head svg { width: 15px; height: 15px; }
+    .sms-bubble {
+      width: 90%;
+      margin: 10px 0 0 auto;
+      padding: 11px 13px;
+      border-radius: 15px 15px 4px 15px;
+      background: var(--accent);
+      color: #fff;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    @media (prefers-color-scheme: dark) { .sms-bubble { color: #07130f; } }
+    .sms-meta { margin-top: 6px; color: var(--muted); font-size: 10px; text-align: right; }
+    .replay-btn {
+      margin: 18px auto 0;
+      padding: 10px 4px;
+      border: 0;
+      background: transparent;
+      color: var(--accent);
+      font-weight: 800;
+      cursor: pointer;
+      text-decoration: underline;
+      text-underline-offset: 4px;
+    }
+    .cta {
+      margin-top: 22px;
+      padding: 22px 18px;
+      border-radius: 19px;
+      background: var(--ink);
+      color: var(--surface);
+      text-align: left;
+    }
+    .cta h3 { font-size: 18px; letter-spacing: -.02em; }
+    .cta p { margin: 5px 0 14px; color: color-mix(in srgb, var(--surface) 70%, var(--muted)); font-size: 12px; line-height: 1.45; }
+    .cta a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 44px;
+      padding: 11px 16px;
+      border-radius: 999px;
+      background: var(--accent);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 800;
+      text-decoration: none;
+    }
+    @media (prefers-color-scheme: dark) { .cta { background: #e7f4ec; color: #10251c; } .cta p { color: #50675d; } .cta a { color: #07130f; } }
+
+    footer {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 18px 0 calc(28px + env(safe-area-inset-bottom));
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+    }
+
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+    @media (max-width: 820px) {
+      main { width: min(100% - 26px, 640px); padding-top: 30px; }
+      .intro { grid-template-columns: 1fr; gap: 30px; min-height: auto; }
+      .copy { max-width: 620px; }
+      h1 { max-width: 560px; font-size: clamp(40px, 10vw, 64px); }
+      .demo-shell { justify-self: center; max-width: 580px; }
+      .demo-shell::before { inset: 6% -2% -3% 5%; }
+      .stage { min-height: 520px; }
+      footer { margin-top: 42px; }
+    }
+
+    @media (max-width: 480px) {
+      .disclaimer { align-items: flex-start; padding-left: 12px; padding-right: 12px; font-size: 10px; }
+      main { width: min(100% - 20px, 440px); padding-top: 24px; }
+      h1 { font-size: clamp(37px, 12.2vw, 53px); }
+      .lead { margin: 17px 0 22px; font-size: 16px; }
+      .capabilities { gap: 8px 13px; font-size: 12px; }
+      .demo-panel { border-radius: 23px; }
+      .phone-header { padding: 14px 15px; }
+      #landingStage { padding: 24px 16px 20px; }
+      .intent-btn { padding: 13px 12px; }
+      .call-top { min-height: 200px; padding: 20px 15px; }
+      .call-body { padding: 15px 14px 18px; }
+      .transcript { height: 282px; }
+      #payoffStage { padding: 24px 15px 17px; }
+      .cta { padding: 19px 15px; }
+      .cta a { width: 100%; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <aside class="disclaimer" aria-label="Simulation disclaimer">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 9v4m0 4h.01M10.3 3.5 2.2 18a2 2 0 0 0 1.75 3h16.1a2 2 0 0 0 1.75-3L13.7 3.5a2 2 0 0 0-3.4 0Z"/></svg>
+    <span>SIMULATED DEMO — fictional business, scripted conversation. No real calls placed or SMS sent.</span>
+  </aside>
+
+  <main>
+    <section class="intro" aria-labelledby="page-title">
+      <div class="copy">
+        <div class="series-tag">Portfolio demo</div>
+        <h1 id="page-title">Hear how an AI agent handles the call.</h1>
+        <p class="lead">Choose what the caller needs, then watch a complete inbound conversation unfold—from the first hello to a booked appointment.</p>
+        <ul class="capabilities" aria-label="Demo capabilities">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>Intent detection</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>Natural dialogue</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>Appointment capture</li>
+        </ul>
+      </div>
+
+      <div class="demo-shell" id="demo">
+        <section class="demo-panel" aria-label="Interactive call simulator">
+          <header class="phone-header">
+            <div class="business-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8.6 3.2c1.1 0 2.1.8 3.4.8s2.3-.8 3.4-.8C18.2 3.2 20 5.8 20 9c0 5.1-3.2 11.8-5.6 11.8-1 0-1.4-1.2-2.4-1.2s-1.4 1.2-2.4 1.2C7.2 20.8 4 14.1 4 9c0-3.2 1.8-5.8 4.6-5.8Z"/><path d="M9 7.5c.6.4 1.6.6 3 .6s2.4-.2 3-.6"/></svg></div>
+            <div>
+              <div class="business-name">Demo Dental Co.</div>
+              <div class="fictional">Fictional practice · AI receptionist</div>
+            </div>
+            <div class="line-status"><span class="status-dot"></span><span id="lineStatus">Ready</span></div>
+          </header>
+
+          <div class="stage active" id="landingStage">
+            <div class="question-label">Incoming call scenario</div>
+            <h2>What does this caller need?</h2>
+            <div class="intent-list">
+              <button class="intent-btn" type="button" data-intent="booking">
+                <span class="intent-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 2v3m10-3v3M3 9h18M5 4h14a2 2 0 0 1 2 2v14H3V6a2 2 0 0 1 2-2Z"/><path d="m9 15 2 2 4-4"/></svg></span>
+                <span><span class="intent-title">Book a cleaning</span><span class="intent-note">New patient appointment</span></span>
+                <span class="arrow" aria-hidden="true">→</span>
+              </button>
+              <button class="intent-btn" type="button" data-intent="pricing">
+                <span class="intent-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M15 8.5c-.7-.7-1.7-1-3-1-1.7 0-3 .8-3 2s1 1.8 3 2.5 3 1.3 3 2.5-1.3 2-3 2c-1.3 0-2.5-.5-3.2-1.2M12 5v14"/></svg></span>
+                <span><span class="intent-title">Ask about pricing</span><span class="intent-note">Cleaning cost and next steps</span></span>
+                <span class="arrow" aria-hidden="true">→</span>
+              </button>
+              <button class="intent-btn" type="button" data-intent="urgent">
+                <span class="intent-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9"/><path d="M12 7v6m0 4h.01M16 4l4 4m0-4-4 4"/></svg></span>
+                <span><span class="intent-title">After-hours toothache</span><span class="intent-note">Responsible symptom triage</span></span>
+                <span class="arrow" aria-hidden="true">→</span>
+              </button>
+            </div>
+            <p class="privacy-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>This guided simulation uses scripted text only. It will not access your microphone.</p>
+          </div>
+
+          <div class="stage" id="callStage">
+            <div class="call-top">
+              <div>
+                <div class="caller-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.8a2 2 0 0 1-.4 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2Z"/></svg></div>
+                <div class="caller-name" id="callerName">Incoming caller</div>
+                <div class="caller-intent" id="callerIntent">Selected scenario</div>
+                <div class="call-clock" id="callClock">00:00</div>
+                <div class="waveform" id="waveform" aria-label="Call audio activity"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+                <button class="start-btn" id="startCall" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.8a2 2 0 0 1-.4 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2Z"/></svg>Start call</button>
+              </div>
+            </div>
+            <div class="call-body">
+              <div class="signal-row" id="signals" aria-live="polite"></div>
+              <div class="transcript" id="transcript" aria-live="polite" aria-label="Live call transcript"><div class="empty-transcript">Press “Start call” to begin the scripted conversation.</div></div>
+            </div>
+          </div>
+
+          <div class="stage" id="payoffStage">
+            <div class="success-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></div>
+            <h2 id="payoffTitle">Appointment booked — Oct 14 at 10:30 AM</h2>
+            <p class="illustrative">Illustrative appointment details for this fictional demo</p>
+            <div class="sms-card" aria-label="Confirmation SMS preview">
+              <div class="sms-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4Z"/></svg>Confirmation SMS preview · not sent</div>
+              <div class="sms-bubble" id="smsText">You’re booked with Demo Dental Co. for Oct 14 at 10:30 AM. Reply C to confirm or call the office to reschedule.</div>
+              <div class="sms-meta">Scripted preview</div>
+            </div>
+            <button class="replay-btn" id="replay" type="button">Try another caller intent</button>
+            <div class="cta">
+              <h3>Want this answering your business line?</h3>
+              <p>See how a voice agent could qualify callers, capture details and book the next step.</p>
+              <a href="https://cal.com/mrbilalali/discovery-call" target="_blank" rel="noopener noreferrer">Book a 15-min discovery call <span aria-hidden="true">↗</span></a>
+            </div>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <footer>Built by Bilal Ali — AI voice agents that answer every lead in 60 seconds.</footer>
+
+  <script>
+    (function () {
+      var scenarios = {
+        booking: {
+          caller: "Maya · new patient",
+          label: "Book a cleaning",
+          signals: [
+            { at: 2, text: "Intent: booking" },
+            { at: 8, text: "Service: cleaning" },
+            { at: 13, text: "Entity: Oct 14, 10:30 AM" },
+            { at: 18, text: "Sentiment: calm" }
+          ],
+          payoff: "Appointment booked — Oct 14 at 10:30 AM",
+          sms: "You’re booked with Demo Dental Co. for Oct 14 at 10:30 AM. Reply C to confirm or call the office to reschedule.",
+          lines: [
+            ["agent", "Thanks for calling Demo Dental Co. This is Ava, the virtual receptionist. How can I help?"],
+            ["caller", "Hi, I’m a new patient and I’d like to book a cleaning."],
+            ["agent", "I can help with that. May I have your first name?"],
+            ["caller", "It’s Maya."],
+            ["agent", "Thanks, Maya. Is this a routine cleaning, or are you having any pain today?"],
+            ["caller", "Just a routine cleaning. No pain."],
+            ["agent", "Great. I’ll look for the next available new-patient cleaning."],
+            ["agent", "Would you prefer morning or afternoon?"],
+            ["caller", "Morning, if possible."],
+            ["agent", "I have an illustrative opening on Oct 14 at 10:30 AM. Would that work?"],
+            ["caller", "Yes, that works."],
+            ["agent", "Perfect. I’ll reserve that time for Maya."],
+            ["agent", "What is the best mobile number for the confirmation?"],
+            ["caller", "Use the number I’m calling from."],
+            ["agent", "Got it. This demo will only preview the confirmation; it won’t send a real message."],
+            ["caller", "Okay."],
+            ["agent", "You’re set for a new-patient cleaning on Oct 14 at 10:30 AM."],
+            ["agent", "Please arrive a few minutes early for the fictional intake form."],
+            ["caller", "Sounds good. Thank you."],
+            ["agent", "You’re welcome, Maya. Have a great day."],
+            ["agent", "Appointment details captured. Ending the simulated call now."]
+          ]
+        },
+        pricing: {
+          caller: "Jordan · pricing inquiry",
+          label: "Ask about pricing",
+          signals: [
+            { at: 2, text: "Intent: pricing" },
+            { at: 7, text: "Service: cleaning" },
+            { at: 12, text: "Next step: booking" },
+            { at: 18, text: "Sentiment: interested" }
+          ],
+          payoff: "Appointment booked — Oct 14 at 10:30 AM",
+          sms: "Your illustrative consultation with Demo Dental Co. is held for Oct 14 at 10:30 AM. Final pricing depends on the exam; no SMS was sent.",
+          lines: [
+            ["agent", "Thanks for calling Demo Dental Co. This is Ava, the virtual receptionist. How can I help?"],
+            ["caller", "Hi, how much does a cleaning cost?"],
+            ["agent", "I can explain the fictional practice’s pricing policy."],
+            ["agent", "The exact total can vary based on whether an exam, X-rays, or deeper cleaning is needed."],
+            ["caller", "So you can’t give me a fixed price?"],
+            ["agent", "Not responsibly without knowing your needs and coverage."],
+            ["agent", "The office would verify benefits and give you a clear estimate before treatment."],
+            ["caller", "That makes sense. I mainly need a standard cleaning."],
+            ["agent", "Are you a new patient, and are you having any pain?"],
+            ["caller", "New patient, and no pain."],
+            ["agent", "Thanks. I can hold an illustrative new-patient visit so the team can confirm the right service."],
+            ["agent", "Would a morning appointment work?"],
+            ["caller", "Yes, morning is better."],
+            ["agent", "I have Oct 14 at 10:30 AM in this scripted example."],
+            ["caller", "Let’s do that."],
+            ["agent", "Great. I’ll reserve the demo slot and preview a confirmation message."],
+            ["agent", "No real appointment or SMS will be created by this simulation."],
+            ["caller", "Understood."],
+            ["agent", "Your illustrative visit is set for Oct 14 at 10:30 AM."],
+            ["caller", "Thanks for the help."],
+            ["agent", "Happy to help. Ending the simulated call now."]
+          ]
+        },
+        urgent: {
+          caller: "Alex · after-hours caller",
+          label: "After-hours toothache",
+          signals: [
+            { at: 2, text: "Intent: urgent symptoms" },
+            { at: 6, text: "Triage: red flags checked" },
+            { at: 13, text: "Next step: morning visit" },
+            { at: 18, text: "Sentiment: reassured" }
+          ],
+          payoff: "Priority visit booked — Oct 14 at 8:30 AM",
+          sms: "Demo Dental Co. has an illustrative priority visit for Oct 14 at 8:30 AM. If symptoms become severe, contact emergency services. No SMS was sent.",
+          lines: [
+            ["agent", "You’ve reached Demo Dental Co. after hours. This is Ava, the virtual receptionist. What’s happening?"],
+            ["caller", "I have a bad toothache and the office is closed."],
+            ["agent", "I’m sorry you’re hurting. I can help assess the next safe step, but I can’t diagnose you."],
+            ["agent", "Are you having trouble breathing or swallowing, heavy bleeding, or swelling spreading toward your eye or neck?"],
+            ["caller", "No. It’s painful, but none of those things."],
+            ["agent", "Thank you. If any of those severe symptoms develop, call emergency services right away."],
+            ["agent", "For tonight, avoid placing aspirin directly on the tooth or gum."],
+            ["agent", "Follow the label on any over-the-counter medicine you already know is safe for you."],
+            ["caller", "Okay. Can someone see me tomorrow morning?"],
+            ["agent", "I can check the fictional urgent schedule."],
+            ["agent", "There is an illustrative priority opening on Oct 14 at 8:30 AM."],
+            ["caller", "Yes, please book it."],
+            ["agent", "I’ll reserve that demo slot. What first name should I use?"],
+            ["caller", "Alex."],
+            ["agent", "Thanks, Alex. This simulation will preview the details but won’t create a real booking or send an SMS."],
+            ["caller", "Understood."],
+            ["agent", "You’re set for the illustrative priority visit at 8:30 AM."],
+            ["agent", "If your symptoms worsen before then, seek urgent medical help rather than waiting."],
+            ["caller", "I will. Thank you."],
+            ["agent", "You’re welcome. Take care tonight."],
+            ["agent", "Priority details captured. Ending the simulated call now."]
+          ]
+        }
+      };
+
+      var landing = document.getElementById("landingStage");
+      var callStage = document.getElementById("callStage");
+      var payoff = document.getElementById("payoffStage");
+      var startButton = document.getElementById("startCall");
+      var transcript = document.getElementById("transcript");
+      var signals = document.getElementById("signals");
+      var waveform = document.getElementById("waveform");
+      var lineStatus = document.getElementById("lineStatus");
+      var clock = document.getElementById("callClock");
+      var current = null;
+      var messageTimers = [];
+      var clockTimer = null;
+      var callStartedAt = 0;
+      var lineGap = 2150;
+
+      function show(stage) {
+        landing.classList.remove("active");
+        callStage.classList.remove("active");
+        payoff.classList.remove("active");
+        stage.classList.add("active");
+      }
+
+      function clearTimers() {
+        messageTimers.forEach(function (timer) { clearTimeout(timer); });
+        messageTimers = [];
+        clearInterval(clockTimer);
+        clockTimer = null;
+      }
+
+      function resetCallUI() {
+        clearTimers();
+        startButton.disabled = false;
+        transcript.innerHTML = '<div class="empty-transcript">Press “Start call” to begin the scripted conversation.</div>';
+        signals.innerHTML = "";
+        waveform.classList.remove("live");
+        clock.textContent = "00:00";
+        lineStatus.textContent = "Ready";
+      }
+
+      document.querySelectorAll(".intent-btn").forEach(function (button) {
+        button.addEventListener("click", function () {
+          current = scenarios[button.getAttribute("data-intent")];
+          resetCallUI();
+          document.getElementById("callerName").textContent = current.caller;
+          document.getElementById("callerIntent").textContent = current.label;
+          show(callStage);
+          startButton.focus();
+        });
+      });
+
+      function formatTime(seconds) {
+        var min = Math.floor(seconds / 60).toString().padStart(2, "0");
+        var sec = (seconds % 60).toString().padStart(2, "0");
+        return min + ":" + sec;
+      }
+
+      function createMessage(role, text) {
+        var row = document.createElement("div");
+        row.className = "message " + role;
+        var speaker = document.createElement("span");
+        speaker.className = "speaker";
+        speaker.textContent = role === "agent" ? "AI" : "C";
+        var bubble = document.createElement("div");
+        bubble.className = "bubble";
+        var label = document.createElement("span");
+        label.className = "speaker-label";
+        label.textContent = role === "agent" ? "Ava · AI agent" : "Caller";
+        var content = document.createElement("span");
+        bubble.appendChild(label);
+        bubble.appendChild(content);
+        row.appendChild(speaker);
+        row.appendChild(bubble);
+        transcript.appendChild(row);
+
+        var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        if (reduced) {
+          content.textContent = text;
+          transcript.scrollTop = transcript.scrollHeight;
+          return;
+        }
+        var index = 0;
+        var step = Math.max(12, Math.min(28, Math.floor(900 / Math.max(text.length, 1))));
+        function typeNext() {
+          content.textContent = text.slice(0, index);
+          transcript.scrollTop = transcript.scrollHeight;
+          index += 2;
+          if (index <= text.length + 2) window.setTimeout(typeNext, step);
+        }
+        typeNext();
+      }
+
+      function activateSignals(lineIndex) {
+        current.signals.forEach(function (signal, idx) {
+          if (signal.at === lineIndex) {
+            var chip = document.createElement("span");
+            chip.className = "signal-chip";
+            chip.textContent = signal.text;
+            signals.appendChild(chip);
+            window.setTimeout(function () { chip.classList.add("on"); }, 30);
+          }
+        });
+      }
+
+      function finishCall() {
+        clearInterval(clockTimer);
+        waveform.classList.remove("live");
+        lineStatus.textContent = "Complete";
+        document.getElementById("payoffTitle").textContent = current.payoff;
+        document.getElementById("smsText").textContent = current.sms;
+        var timer = window.setTimeout(function () {
+          show(payoff);
+          payoff.focus && payoff.focus();
+        }, 2600);
+        messageTimers.push(timer);
+      }
+
+      startButton.addEventListener("click", function () {
+        if (!current) return;
+        startButton.disabled = true;
+        transcript.innerHTML = "";
+        signals.innerHTML = "";
+        waveform.classList.add("live");
+        lineStatus.textContent = "Live";
+        callStartedAt = Date.now();
+        clockTimer = window.setInterval(function () {
+          clock.textContent = formatTime(Math.floor((Date.now() - callStartedAt) / 1000));
+        }, 250);
+
+        current.lines.forEach(function (line, index) {
+          var timer = window.setTimeout(function () {
+            createMessage(line[0], line[1]);
+            activateSignals(index);
+            if (index === current.lines.length - 1) finishCall();
+          }, index * lineGap);
+          messageTimers.push(timer);
+        });
+      });
+
+      document.getElementById("replay").addEventListener("click", function () {
+        clearTimers();
+        current = null;
+        lineStatus.textContent = "Ready";
+        show(landing);
+        document.querySelector(".intent-btn").focus();
+        document.getElementById("demo").scrollIntoView({ behavior: "smooth", block: "center" });
+      });
+    }());
+  </script>
+</body>
+</html>
